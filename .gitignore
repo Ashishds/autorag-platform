@@ -2,6 +2,19 @@
 # AutoRAG Enterprise Git Ignore Rules
 # ==============================================================================
 
+# ---- Local Scripts, Specs & IDE Configs ----
+.cursor/
+AGENTS.md
+CLAUDE.md
+.editorconfig
+.gitattributes
+.github/
+docs/
+Makefile
+production_widget.html
+start_local.ps1
+stop_local.ps1
+
 # ---- Environment Variables & Secrets ----
 .env
 .env.*

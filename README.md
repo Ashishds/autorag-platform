@@ -20,10 +20,10 @@
 
 [Key Features](#-key-features) •
 [Architecture](#-enterprise-architecture) •
-[Quickstart (No Docker)](#-quick-start--local-without-docker) •
+[Quickstart](#-quick-start) •
 [Docker Deployment](#-containerized-deployment-docker) •
 [API Reference](#-api-reference) •
-[Design Specs](#-authoritative-specifications--documentation)
+[Security & Guardrails](#-security--guardrails)
 
 ---
 
@@ -69,7 +69,6 @@ Traditional enterprise RAG implementations suffer from **fragile manual tuning**
 flowchart TB
     subgraph ClientLayer["Frontend & Client Layer"]
         UI["Next.js 15 Web Console<br/>(Dashboard · Playground · Pipeline Studio)"]
-        Widget["Embeddable Production Widget"]
     end
 
     subgraph FastPath["Query FastPath (Synchronous FastAPI · Sub-Second)"]
@@ -97,12 +96,11 @@ flowchart TB
     end
 
     subgraph Persistence["Storage & Database Layer"]
-        PG[("Supabase / PostgreSQL 16+<br/>• pgvector (HNSW 768d)<br/>• tsvector Full-Text<br/>• Pipeline Configs & Runs")]
-        REDIS[("Redis 7 / Memurai<br/>• Task Queues<br/>• Result Backend<br/>• Caching")]
+        PG[("PostgreSQL 16+ / Supabase<br/>• pgvector (HNSW 768d)<br/>• tsvector Full-Text<br/>• Pipeline Configs & Runs")]
+        REDIS[("Redis 7<br/>• Task Queues<br/>• Result Backend<br/>• Caching")]
     end
 
     UI --> FastPath
-    Widget --> FastPath
     ClientLayer --> AsyncWorker
     FastPath --> PG
     AsyncWorker --> PG
@@ -120,22 +118,20 @@ flowchart TB
 | **Backend API** | **FastAPI** (Python 3.12+) | High-throughput asynchronous REST API |
 | **Worker Engine** | **Celery** + **Redis** | Distributed document parsing, background sync, and evaluation |
 | **Loop Orchestration** | **LangGraph** | Checkpointed stateful optimization loop |
-| **Database & Vector** | **Supabase / PostgreSQL 16+** | `pgvector` HNSW indexes + `tsvector` full-text search (No ORM, high-speed `asyncpg`) |
+| **Database & Vector** | **PostgreSQL 16+ / Supabase** | `pgvector` HNSW indexes + `tsvector` full-text search (No ORM, high-speed `asyncpg`) |
 | **Frontend UI** | **Next.js 15** (React 18, Tailwind CSS, Lucide) | Enterprise admin control panel, playground, and audit logs |
 | **Embeddings & LLMs** | **Gemini 2.5 Flash / Pro**, **GPT-4o**, **Cohere** | Scalable embeddings (768-dim) and cross-encoder re-ranking |
 | **Package Management** | **uv** & **npm** | Ultra-fast reproducible builds |
 
 ---
 
-## 🚀 Quick Start — Local Without Docker
-
-The project is fully pre-configured to run on Windows, macOS, or Linux natively without container overhead.
+## 🚀 Quick Start
 
 ### Prerequisites
 * **Python 3.12+** with [`uv`](https://docs.astral.sh/uv/) installed
 * **Node.js 18+** with `npm`
-* **Redis** (Local Redis server or [Memurai](https://www.memurai.com/) on Windows)
-* **PostgreSQL with pgvector** (or free [Supabase](https://supabase.com/) project)
+* **Redis 7** (or Memurai on Windows)
+* **PostgreSQL 16+** with `pgvector` (or Supabase)
 
 ---
 
@@ -144,12 +140,12 @@ The project is fully pre-configured to run on Windows, macOS, or Linux natively 
 Clone the repository and copy the environment template:
 
 ```bash
-cd AutoRAG
+cd autorag-platform
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env.local
 ```
 
-Configure your API keys and database credentials in `backend/.env`:
+Configure your credentials in `backend/.env`:
 ```ini
 POSTGRES_URL=postgresql://user:password@localhost:5432/autorag
 SUPABASE_URL=https://your-project.supabase.co
@@ -162,22 +158,7 @@ COHERE_API_KEY=your-cohere-api-key
 
 ---
 
-### Step 2: One-Click Launch (Windows PowerShell)
-
-Run the included automated launcher:
-```powershell
-.\start_local.ps1
-```
-*This verifies Redis on port `6379`, and launches the FastAPI backend, Celery worker (`--pool=solo`), and Next.js frontend in coordinated processes.*
-
-To cleanly terminate all running local processes:
-```powershell
-.\stop_local.ps1
-```
-
----
-
-### Step 3: Manual Step-by-Step Launch (Any OS)
+### Step 2: Run Services
 
 **1. Database Migrations:**
 ```bash
@@ -196,7 +177,7 @@ uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 cd backend
 # Windows:
 uv run celery -A app.workers.celery_app.celery worker --loglevel=info --pool=solo
-# Linux/macOS:
+# Linux / macOS:
 uv run celery -A app.workers.celery_app.celery worker --loglevel=info
 ```
 
@@ -324,14 +305,7 @@ uv run ruff format --check .
 ## 📁 Repository Structure
 
 ```
-AutoRAG/
-├── .github/workflows/          # Enterprise CI/CD pipeline definitions
-├── docs/                       # 📐 Authoritative architecture & specifications
-│   ├── AutoRAG_BRD_v1_0.md     # Business Requirements Document
-│   ├── AutoRAG_PRD_v2_4.md     # Product Requirements Document
-│   ├── AutoRAG-HLD-v1.0.md     # High-Level Architecture Design
-│   ├── AutoRAG-LLD-v1.0.md     # Low-Level Implementation Design
-│   └── comprehensive_system_guide.md # Operator and Deployment Manual
+autorag-platform/
 ├── backend/                    # FastAPI + Celery + LangGraph
 │   ├── alembic/                # Database migrations & PostgreSQL RRF functions
 │   ├── app/
@@ -347,27 +321,15 @@ AutoRAG/
 ├── frontend/                   # Next.js 15 Enterprise Console
 │   ├── src/app/                # App router (Dashboard, Documents, Pipelines)
 │   └── src/components/         # Reusable UI system (Tailwind + Radix)
-├── production_widget.html      # Lightweight client web embed widget
-├── start_local.ps1             # Local development orchestrator (No Docker)
-├── stop_local.ps1              # Process cleanup script
-├── Makefile                    # Developer workflow automation
-└── docker-compose.yml          # Containerized deployment spec
+├── docker-compose.yml          # Containerized deployment spec
+├── .gitignore                  # Production exclusion rules
+├── LICENSE                     # MIT License
+└── README.md                   # Enterprise documentation
 ```
 
 ---
 
-## 📐 Authoritative Specifications & Documentation
-
-Comprehensive system specifications are maintained in the [`docs/`](./docs) folder:
-* [**Business Requirements (BRD)**](./docs/AutoRAG_BRD_v1_0.md) — Business context, objectives, and ROI criteria.
-* [**Product Requirements (PRD)**](./docs/AutoRAG_PRD_v2_4.md) — Feature specifications, user personas, and KPIs.
-* [**High-Level Design (HLD)**](./docs/AutoRAG-HLD-v1.0.md) — Data flow, subsystem contracts, and topology.
-* [**Low-Level Design (LLD)**](./docs/AutoRAG-LLD-v1.0.md) — Complete database schemas, algorithms, and class diagrams.
-* [**Operator System Guide**](./docs/comprehensive_system_guide.md) — Operational runbook and troubleshooting.
-
----
-
-## 🔒 Security & Privacy
+## 🔒 Security & Guardrails
 
 * **Zero Secret Commitment**: All API tokens, service role keys, and credentials are strictly isolated in `.env` files (enforced by `.gitignore`).
 * **In-Flight Anonymization**: PII is scrubbed before any document chunk is dispatched to embedding or LLM providers.
