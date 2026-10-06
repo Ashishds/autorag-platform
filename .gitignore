@@ -2,10 +2,7 @@
 # AutoRAG Enterprise Git Ignore Rules
 # ==============================================================================
 
-# ---- Local Scripts, Specs & IDE Configs ----
-.cursor/
-AGENTS.md
-CLAUDE.md
+# ---- Local Scripts, Specs & Scratch ----
 .editorconfig
 .gitattributes
 .github/
