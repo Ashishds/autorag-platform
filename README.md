@@ -14,7 +14,6 @@
 [![Celery](https://img.shields.io/badge/Celery-Distributed%20Workers-37814A?logo=celery&logoColor=white)](https://docs.celeryq.dev/)
 [![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)](https://redis.io)
 [![Code Style](https://img.shields.io/badge/Code%20Style-Ruff-black.svg)](https://github.com/astral-sh/ruff)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 <br/>
 
@@ -321,10 +320,12 @@ autorag-platform/
 ├── frontend/                   # Next.js 15 Enterprise Console
 │   ├── src/app/                # App router (Dashboard, Documents, Pipelines)
 │   └── src/components/         # Reusable UI system (Tailwind + Radix)
+├── .cursor/                    # IDE prompt rules & agent context
+├── AGENTS.md                   # Canonical AI developer instructions
+├── CLAUDE.md                   # Claude development guidance
 ├── docker-compose.yml          # Containerized deployment spec
 ├── .gitignore                  # Production exclusion rules
-├── LICENSE                     # MIT License
-└── README.md                   # Enterprise documentation
+└── README.md                   # Enterprise platform documentation
 ```
 
 ---
@@ -334,9 +335,3 @@ autorag-platform/
 * **Zero Secret Commitment**: All API tokens, service role keys, and credentials are strictly isolated in `.env` files (enforced by `.gitignore`).
 * **In-Flight Anonymization**: PII is scrubbed before any document chunk is dispatched to embedding or LLM providers.
 * **Audit Trail**: Every query, generation, evaluation score, and configuration promotion is persistently recorded in the audit repository.
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
