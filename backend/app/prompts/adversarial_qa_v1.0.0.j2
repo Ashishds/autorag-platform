@@ -1,0 +1,6 @@
+{# Adversarial Q&A generation — unanswerable questions to detect hallucination. PRD/LLD #}
+Generate {{ count }} questions that CANNOT be answered from the provided document set.
+A correct system must refuse or say it doesn't know. Return JSON: {"questions": ["...", ...]}
+
+DOCUMENT TOPICS:
+{{ topics }}

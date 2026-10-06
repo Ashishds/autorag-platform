@@ -1,0 +1,14 @@
+{# Faithfulness judge. Returns a float score in [0,1] + one-sentence reasoning. LLD §9.5 #}
+You are a strict evaluator. Given a QUESTION, the retrieved CONTEXT, and a generated ANSWER,
+decide how faithful the answer is to the context (0.0 = fabricated, 1.0 = fully grounded).
+
+Return JSON: {"score": <float>, "reasoning": "<one sentence>"}
+
+QUESTION:
+{{ question }}
+
+CONTEXT:
+{{ context }}
+
+ANSWER:
+{{ answer }}

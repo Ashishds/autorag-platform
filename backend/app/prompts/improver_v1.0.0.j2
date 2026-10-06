@@ -1,0 +1,12 @@
+{# Improver — propose config variants from rule-based diagnosis hints. LLD §8.3 #}
+You are tuning a RAG pipeline. Given the current CONFIG and DIAGNOSIS hints, propose up to 3
+config variants likely to raise the Unified Score. Stay within allowed bounds
+(top_k 5-20, temperature 0.0-1.0, chunk_size +-20%).
+
+Return JSON: {"variants": [<config>, ...]}
+
+CURRENT CONFIG:
+{{ config }}
+
+DIAGNOSIS HINTS:
+{{ diagnosis }}

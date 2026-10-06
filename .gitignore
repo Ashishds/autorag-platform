@@ -1,0 +1,96 @@
+# ==============================================================================
+# AutoRAG Enterprise Git Ignore Rules
+# ==============================================================================
+
+# ---- Environment Variables & Secrets ----
+.env
+.env.*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.local
+*.pem
+*.key
+*.cert
+*.crt
+
+# ---- Python & Virtual Environments ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+eggs/
+parts/
+bin/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+.venv/
+venv/
+env/
+ENV/
+.uv/
+
+# ---- Python Testing & Linting Tools ----
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# ---- Celery & Worker State ----
+celerybeat-schedule
+celerybeat-schedule*
+*.pid
+
+# ---- Node.js & Next.js ----
+node_modules/
+.next/
+out/
+.pnp
+.pnp.js
+*.tsbuildinfo
+
+# ---- Logs & Runtime Dumps ----
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---- Local Upload Storage & Media ----
+backend/storage/
+storage/
+uploads/
+tmp/
+temp/
+
+# ---- Operating System & Editor Files ----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
